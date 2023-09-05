@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using webapi.filmes.manha.Domains;
 using webapi.filmes.manha.Interfaces;
 using webapi.filmes.manha.Repositories;
@@ -31,7 +33,7 @@ namespace webapi.filmes.manha.Controller
         /// <returns></returns>
 
         [HttpGet]
-
+        [Authorize(Roles = "Administrador")]
         public IActionResult Get()
         {
             try
@@ -56,6 +58,7 @@ namespace webapi.filmes.manha.Controller
         /// <param name="filmeNovo"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Post(FilmeDomains filmeNovo)
         {
             try
@@ -76,6 +79,7 @@ namespace webapi.filmes.manha.Controller
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Deletar(int id)
         {
             try
@@ -96,6 +100,7 @@ namespace webapi.filmes.manha.Controller
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Authorize(Roles = "Administrador,Comum")]
         public IActionResult SearchById(int id)
         {
             try
@@ -125,7 +130,7 @@ namespace webapi.filmes.manha.Controller
         /// <param name="Filme"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-
+        [Authorize(Roles = "Administrador")]
         public IActionResult Put(int id, FilmeDomains Filme)
         {
 
@@ -147,6 +152,7 @@ namespace webapi.filmes.manha.Controller
         /// <returns></returns>
        
         [HttpPut]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Put(FilmeDomains Filme)
         {
             try

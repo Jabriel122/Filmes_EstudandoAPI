@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using webapi.filmes.manha.Domains;
 using webapi.filmes.manha.Interfaces;
@@ -13,6 +14,8 @@ namespace webapi.filmes.manha.Controller
 
     //Definir que é um controlador APi
     [ApiController]
+
+    
 
     //Definir que o tipo de resposta da API será no formato JSON
     [Produces("application/json")]
@@ -63,6 +66,7 @@ namespace webapi.filmes.manha.Controller
         /// <param name="novoGenero">Objeto recebido na requisição</param>
         /// <returns>Resposta para o usuário(front-end)</returns>
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Post(GeneroDomain novoGenero)
         {
             try
@@ -79,12 +83,14 @@ namespace webapi.filmes.manha.Controller
                 return BadRequest(erro.Message);
             }
         }
+
         /// <summary>
         /// Endepoint que aciona o método de deletar gênero
         /// </summary>
         /// <param name="Id"> Id do gênero a ser deletr gênero</param>
         /// <returns> Status Code </returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Deletar(int id)
         {
             try
@@ -100,6 +106,7 @@ namespace webapi.filmes.manha.Controller
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Administrador, Comum")]
         public IActionResult SearchById(int id)
         {
             try
@@ -136,6 +143,7 @@ namespace webapi.filmes.manha.Controller
         /// <param name="Genero"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Put(int id, GeneroDomain Genero)
         {
             try
@@ -156,6 +164,7 @@ namespace webapi.filmes.manha.Controller
         /// <param name="Genero"></param>
         /// <returns></returns>
         [HttpPut]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Put(GeneroDomain Genero)
         {
             try

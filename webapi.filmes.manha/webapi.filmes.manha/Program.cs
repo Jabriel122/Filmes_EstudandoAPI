@@ -5,9 +5,8 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//adiciona o servico de controller
-builder.Services.AddControllers();
-builder.Services.AddSwaggerGen();
+
+
 
 //Adcionar o serviço de Jwt Bearer (forma de autenticação)
 builder.Services.AddAuthentication(options =>
@@ -29,6 +28,8 @@ builder.Services.AddAuthentication(options =>
          //define se o tempo de expiração será valido
          ValidateLifetime = true,
 
+         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("filmes-chaves-autenticacao-webapi-dev")),
+
          //forma de criptografar e valida a chave de autenticação
          ClockSkew = TimeSpan.FromMinutes(5),
 
@@ -37,8 +38,9 @@ builder.Services.AddAuthentication(options =>
 
          //nome do audinece (para onde está indo)
          ValidAudience = "webapi.filmes.manha"
+         
 
-     };
+     }; 
 
  });
 
@@ -65,9 +67,36 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
 
+    //Usando a autenticaçao no Swagger
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Value: Bearer TokenJWT ",
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+
+
 });
 
-
+//adiciona o servico de controller
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -92,8 +121,9 @@ app.MapControllers();
 
 //Adciona Autenticação
 app.UseAuthentication();
+
 //adciona autorização
-app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 

@@ -89,7 +89,7 @@ namespace webapi.filmes.manha.Controller
                         expires: DateTime.Now.AddMinutes(5),
 
                         //credenciais do token 
-                        signingCredentials:creds
+                        signingCredentials: creds
                     );
 
                 //Quinta - retornar o token criado
